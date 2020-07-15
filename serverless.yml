@@ -1,0 +1,27 @@
+service: my-aws-scala-sbt
+
+custom:
+  defaultStage: dev
+  api_version: v0
+
+provider:
+  name: aws
+  runtime: java11
+  region: ap-northeast-1
+  stage: ${opt:stage, self:custom.defaultStage}
+  # environment:
+  #   ${file(./env.yml)}
+
+package:
+  artifact: target/scala-2.13/handler.jar
+
+functions:
+  job:
+    handler: handler.Job
+
+  api:
+    handler: handler.Api
+    events:
+      - http:
+          path: /
+          method: get
